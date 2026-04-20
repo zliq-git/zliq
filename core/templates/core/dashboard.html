@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Broker SaaS Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      .small-chart {
+    height: 220px;   /* 👈 altura total del bloque */
+    }
+
+    .chart-wrapper {
+    height: 160px;   /* 👈 altura real del gráfico */
+    }
+
+    .chart-wrapper canvas {
+    max-height: 160px !important;
+    }
+        body {
+            font-family: Arial;
+            background: #f6f7fb;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .big {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>📊 Broker SaaS Dashboard</h2>
+
+<!-- KPI -->
+<div class="grid">
+    <div class="card">
+        <p>💰 Ingresos</p>
+        <div class="big">{{ ingresos_totales }} €</div>
+    </div>
+
+    <div class="card">
+        <p>⏳ Pendientes</p>
+        <div class="big">{{ pendientes }} €</div>
+    </div>
+
+    <div class="card">
+        <p>📄 Pólizas</p>
+        <div class="big">{{ polizas_activas }}</div>
+    </div>
+
+    <div class="card">
+        <p>📊 Media comisión</p>
+        <div class="big">{{ ingreso_medio|floatformat:2 }} €</div>
+    </div>
+</div>
+
+<!-- CHARTS -->
+<div class="section">
+
+    <div class="box small-chart">
+    <h3>📈 Ingresos mensuales</h3>
+    <div class="chart-wrapper">
+        <canvas id="line"></canvas>
+    </div>
+</div>
+
+    <div class="box">
+        <h3>📦 Tipos póliza</h3>
+        <canvas id="bar"></canvas>
+    </div>
+
+</div>
+
+<!-- TOP AGENTES -->
+<div class="box" style="margin-top:20px;">
+    <h3>🧑‍💼 Top agentes</h3>
+    <ul>
+        {% for a in top_agentes %}
+            <li>{{ a.poliza__agente__nombre }} - {{ a.total }} €</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+new Chart(document.getElementById('line'), {
+    type: 'line',
+    data: {
+        labels: JSON.parse('{{ meses|escapejs }}'),
+        datasets: [{
+            label: 'Ingresos',
+            data: JSON.parse('{{ valores_mes|escapejs }}'),
+            borderWidth: 2
+        }]
+    },
+    options: {
+        maintainAspectRatio: false
+    }
+});
+
+new Chart(document.getElementById('bar'), {
+    type: 'bar',
+    data: {
+        labels: JSON.parse('{{ tipos_labels|escapejs }}'),
+        datasets: [{
+            label: 'Pólizas',
+            data: JSON.parse('{{ tipos_values|escapejs }}')
+        }]
+    }
+});
+</script>
+
+</body>
+</html>
