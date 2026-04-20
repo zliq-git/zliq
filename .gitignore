@@ -1,0 +1,39 @@
+# Base de datos
+db.sqlite3
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Django
+*.log
+local_settings.py
+
+# Media y uploads (si aplicas)
+media/
+
+# Static files (solo si los generas localmente)
+staticfiles/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
